@@ -1,9 +1,7 @@
-import os
+
 import socket
-import sys
-import time
 import threading
-from multiprocessing.pool import ThreadPool
+
 
 
 def connect(host):
