@@ -6,8 +6,6 @@ host = ""
 port = 666
 import threading
 
- #Unbedingt weiter machen, file trans
-
 class Mordax():
     def __init__(self):
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

