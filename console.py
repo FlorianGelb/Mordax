@@ -42,7 +42,8 @@ def start():
        Client.scan("none")
     elif x == "scan -log":
         Client.scan("log")
-
+    elif x == "payload":
+        Client.create_payload()
 
     else:
         print("command not found")
