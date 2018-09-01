@@ -1,7 +1,5 @@
 import os
 import Client
-from multiprocessing.pool import ThreadPool
-pool = ThreadPool(processes=1)
 
 
 class Console(Client.Client):
@@ -10,6 +8,7 @@ class Console(Client.Client):
 
         client = Client.Client()
         os.system("cls")
+        self.setVersion(1.0)
 
         print("                         .___              ")
         print("  _____   ___________  __| _/____  ___  ___")
@@ -39,14 +38,23 @@ class Console(Client.Client):
             self.start()
         elif x == "connect":
             client.connect(0)
-        elif x == "scan":
-           client.scan("none")
-        elif x == "scan -log":
-            client.scan("log")
         elif x == "payload":
             client.create_payload()
+        if x == "check":
+            self.checkVersion()
+        elif x == "update":
+            self.downloadVersion("console.py")
+        if x.startswith("scan"):
+            if x[4:] == " -log":
+                client.scan("log")
+            if x[4:] == " -aa":
+                client.scan("aa")
+
         else:
             print("command not found")
             self.start()
+
+
+
 Con = Console()
 Con.start()
