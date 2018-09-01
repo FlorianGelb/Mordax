@@ -4,9 +4,9 @@ import threading
 import Compiler
 from tqdm import tqdm
 import Crypt
+import CheckVersion
 
-
-class Client(Compiler.Compile,Crypt.Crypt):
+class Client(Compiler.Compile,Crypt.Crypt, CheckVersion.checkVersion):
 
     def create_payload(self):
         iv = self.KeyAndIv("8s6Ge9dd", "OVbfVVRciZNgcObT")
@@ -162,9 +162,6 @@ class Client(Compiler.Compile,Crypt.Crypt):
        t6.start()
        t7.start()
        t8.start()
-
-    def get_aa(self):
-        #hier weiter machen (arp -a) scannen
 
 
     def sscan(self ,strange,srange,thread):

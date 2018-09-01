@@ -3,12 +3,13 @@ import subprocess
 import os
 import sys
 import Crypt
+import CheckVersion
 
 host = ""
 port = 666
 import threading
 
-class Mordax(Crypt.Crypt):
+class Mordax(Crypt.Crypt, CheckVersion.checkVersion):
 
     def __init__(self):
 
@@ -16,6 +17,10 @@ class Mordax(Crypt.Crypt):
         self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.s.bind((host, port))
         self.s.listen(3)
+        self.setVersion(1.0)
+        self.checkVersion()
+        if self.checkVersion():
+            self.downloadVersion("server.py")
 
     def start(self):
 

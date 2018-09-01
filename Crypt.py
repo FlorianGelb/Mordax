@@ -39,3 +39,4 @@ class Crypt():
     depad = lambda self, msg: msg.rstrip("*")
     b64Enc = lambda self, msg: base64.b64encode(self.encode(msg))
     b64Dec = lambda self, msg: self.depad(self.decode(base64.b64decode(msg)))
+    gitb64 = lambda self, txt: base64.b64decode(txt)

@@ -44,7 +44,7 @@ class Compile:
             setup = open("setup.py", "w+")
             setup.write("from distutils.core import setup\n")
             setup.write("import py2exe\n")
-            setup.write("setup(console=['Payload.py'], options = {'py2exe': {'bundle_files': 1, 'compressed': True}},windows = [{'script': 'Payload.py'}],zipfile = None)")
+            setup.write("setup(console=['Payload'], options = {'py2exe': {'bundle_files': 1, 'compressed': True}},windows = [{'script': 'Payload.py'}],zipfile = None)")
             setup.close()
             try:
                 os.system("python setup.py py2exe > log.log")
