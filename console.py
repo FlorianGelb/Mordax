@@ -3,6 +3,8 @@ import Client
 
 
 class Console(Client.Client):
+    def __init__(self):
+        pass
 
     def start(self):
 
@@ -22,10 +24,8 @@ class Console(Client.Client):
         print("                                           ")
         print("                                           ")
 
-
         x = raw_input("<command>: ")
         x = str(x)
-
 
         if x == "help":
             print("connect          connect to another pc")
@@ -44,16 +44,12 @@ class Console(Client.Client):
             self.checkVersion()
         elif x == "update":
             self.downloadVersion("console.py")
-        if x.startswith("scan"):
-            if x[4:] == " -log":
-                client.scan("log")
-            if x[4:] == " -aa":
-                client.scan("aa")
+        if x == "scan":
+            client.scan()
 
         else:
             print("command not found")
             self.start()
-
 
 
 Con = Console()
