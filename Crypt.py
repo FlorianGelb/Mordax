@@ -6,6 +6,7 @@ import base64
 
 
 class Crypt:
+
     def __init__(self):
         self.initialization_vector = 0
         self.key = 0

@@ -10,7 +10,7 @@ class Console(Client.Client):
 
         client = Client.Client()
         os.system("cls")
-        self.setVersion(1.0)
+        self.set_version(1.0)
 
         print("                         .___              ")
         print("  _____   ___________  __| _/____  ___  ___")
@@ -41,9 +41,9 @@ class Console(Client.Client):
         elif x == "payload":
             client.create_payload()
         if x == "check":
-            self.checkVersion()
+            self.check_version()
         elif x == "update":
-            self.downloadVersion("console.py")
+            self.download_version("console.py")
         if x == "scan":
             client.scan()
 

@@ -10,7 +10,7 @@ host = ""
 port = 666
 
 
-class Mordax(Crypt.Crypt, CheckVersion.checkVersion):
+class Mordax(Crypt.Crypt, CheckVersion.CheckVersion):
 
     def __init__(self):
 
@@ -18,12 +18,12 @@ class Mordax(Crypt.Crypt, CheckVersion.checkVersion):
         self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.s.bind((host, port))
         self.s.listen(3)
-        self.setVersion(1.0)
-        self.checkVersion()
+        self.set_version(1.0)
+        self.check_version()
         self.connection, self.connected_adress = 0, 0
         self.initialization_vector = "Init_Vektor"
-        if self.checkVersion():
-            self.downloadVersion("server.py")
+        if self.check_version():
+            self.download_version("server.py")
 
     def start(self):
 
