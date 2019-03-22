@@ -33,7 +33,7 @@ class Client(Crypt.Crypt, CheckVersion.CheckVersion):
                 print("server is offline")
                 timeout = timeout+1
                 if timeout == 5:
-                    exit()
+                    return 0
             else:
                 state = 0
         iv = self.key_and_iv("mordax", 0)

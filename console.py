@@ -32,14 +32,12 @@ class Console(Client.Client):
             print("                                      ")
             print("scan             scan infected IPs    ")
             print("                                      ")
-            print("help             showes help          ")
+            print("help             shows help          ")
             print("                                      ")
             os.system("pause")
             self.start()
         elif x == "connect":
             client.connect(0)
-        elif x == "payload":
-            client.create_payload()
         if x == "check":
             self.check_version()
         elif x == "update":
@@ -52,5 +50,6 @@ class Console(Client.Client):
             self.start()
 
 
-Con = Console()
-Con.start()
+if __name__ == "__main__":
+    Con = Console()
+    Con.start()
