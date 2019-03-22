@@ -29,7 +29,7 @@ class Mordax(Crypt.Crypt, CheckVersion.checkVersion):
 
         self.connection, self.connected_adress = self.s.accept()
         self.initialization_vector = self.depad(self.connection.recv(256))
-        self.KeyAndIv("mordax", self.initialization_vector)
+        self.key_and_iv("mordax", self.initialization_vector)
 
         if self.connection and self.connected_adress:
             connect = threading.Thread(target=self.server)

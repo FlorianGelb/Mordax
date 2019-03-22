@@ -2,38 +2,42 @@ from Crypto.Random import random
 from Crypto.Cipher import AES
 import hashlib
 import string
-import base64, sys
-class Crypt():
+import base64
 
-    def KeyAndIv(self, key, iv):
 
-        Letters = list (string.ascii_letters)
+class Crypt:
+    def __init__(self):
+        self.initialization_vector = 0
+        self.key = 0
+
+    def key_and_iv(self, key, iv):
+        letters = list(string.ascii_letters)
         if iv != 0:
-            self.iv = iv
+            self.initialization_vector = iv
         else:
-            self.iv = ""
+            self.initialization_vector = ""
 
-            for x in range (16):
+            for x in range(16):
 
-                self.iv = self.iv + random.choice(Letters)
+                self.initialization_vector = self.initialization_vector + random.choice(letters)
 
         self.key = hashlib.sha256(str.encode(key))
-        return self.iv
+        return self.initialization_vector
 
     def pad(self, msg):
         while len(msg) % 16 != 0:
             msg = msg + "*"
-        return (msg)
+        return msg
 
     def encode(self, msg):
         msg = self.pad(msg)
-        cipher = AES.new(self.key.digest(), AES.MODE_CBC, self.iv)
+        cipher = AES.new(self.key.digest(), AES.MODE_CBC, self.initialization_vector)
         cipher = cipher.encrypt(msg)
-        return(cipher)
+        return cipher
 
     def decode(self, msg):
         msg = self.pad(msg)
-        cipher = AES.new(self.key.digest(), AES.MODE_CBC, self.iv)
+        cipher = AES.new(self.key.digest(), AES.MODE_CBC, self.initialization_vector)
         return cipher.decrypt(msg)
 
     depad = lambda self, msg: msg.rstrip("*")

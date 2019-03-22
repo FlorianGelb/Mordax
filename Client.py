@@ -99,7 +99,7 @@ class Client(Compiler.Compile, Crypt.Crypt, CheckVersion.checkVersion):
                     exit()
             else:
                 state = 0
-        iv = self.KeyAndIv("mordax", 0)
+        iv = self.key_and_iv("mordax", 0)
         s.send(iv)
         text = "<command:>"                                                                         # BLOCK_SIZE = 2048
 
