@@ -4,13 +4,12 @@ import Client
 
 class Console(Client.Client):
     def __init__(self):
-        pass
+        self.client = Client.Client()
+        self.set_version(1.0)
+        self.start()
 
     def start(self):
-
-        client = Client.Client()
         os.system("cls")
-        self.set_version(1.0)
 
         print("                         .___              ")
         print("  _____   ___________  __| _/____  ___  ___")
@@ -37,13 +36,13 @@ class Console(Client.Client):
             os.system("pause")
             self.start()
         elif x == "connect":
-            client.connect(0)
+            self.client.connect(0)
         if x == "check":
             self.check_version()
         elif x == "update":
             self.download_version("console.py")
         if x == "scan":
-            client.scan()
+            self.client.scan()
 
         else:
             print("command not found")
@@ -52,4 +51,4 @@ class Console(Client.Client):
 
 if __name__ == "__main__":
     Con = Console()
-    Con.start()
+

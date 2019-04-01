@@ -4,12 +4,6 @@ import requests
 
 class CheckVersion(Crypt.Crypt):
 
-    def __init__(self):
-        self.user = "FlorianGelb"
-        self.repo = "Mordax"
-        self.content = 0
-        self.version = 0
-
     @staticmethod
     def set_version(version=0):
         if version == 0:
@@ -19,6 +13,8 @@ class CheckVersion(Crypt.Crypt):
             return version
 
     def get_latest_version(self):
+        self.user = "FlorianGelb"
+        self.repo = "Mordax"
         path = "version.txt"
         url = 'https://api.github.com/repos/{}/{}/contents/{}'.format(self.user,self.repo,path)
         request = requests.get(url)
